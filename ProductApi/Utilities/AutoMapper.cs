@@ -9,6 +9,7 @@ namespace ProductApi.Utilities
         public AutoMapper()
         {
             CreateMap<ProductDTO, Product>();
+            CreateMap<RegisterDTO, Users>();
         }
     }
 }

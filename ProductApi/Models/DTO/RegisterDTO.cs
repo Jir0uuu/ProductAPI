@@ -1,10 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace ProductApi.Models
+﻿namespace ProductApi.Models.DTO
 {
-    public class Users
+    public class RegisterDTO
     {
-        [Key]
         public string EmailID { get; set; } = null!;
         public string Username { get; set; } = null!;
         public string Password { get; set; } = null!;

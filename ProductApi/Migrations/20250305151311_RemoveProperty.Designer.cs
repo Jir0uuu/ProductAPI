@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProductApi.DataAccess;
 
@@ -11,9 +12,11 @@ using ProductApi.DataAccess;
 namespace ProductApi.Migrations
 {
     [DbContext(typeof(ProductRepository))]
-    partial class ProductRepositoryModelSnapshot : ModelSnapshot
+    [Migration("20250305151311_RemoveProperty")]
+    partial class RemoveProperty
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -49,18 +52,14 @@ namespace ProductApi.Migrations
 
             modelBuilder.Entity("ProductApi.Models.Users", b =>
                 {
-                    b.Property<string>("EmailID")
+                    b.Property<string>("username")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("Password")
+                    b.Property<string>("password")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Username")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("EmailID");
+                    b.HasKey("username");
 
                     b.ToTable("authenticateUser");
                 });

@@ -8,13 +8,14 @@ using System;
 
 namespace ProductApi.DataAccess
 {
-    public class ProductData : IDataAccess
+    public class ProductData : IProductDataAccess
     {
         private readonly ProductRepository _productRepository;
-
-        public ProductData(ProductRepository productRepository)
+        private readonly IMapper _mapper;
+        public ProductData(ProductRepository productRepository, IMapper mapper)
         {
             this._productRepository = productRepository;
+            this._mapper = mapper;
         }
 
         public async Task<List<Product>> GetAllProducts()
@@ -47,9 +48,8 @@ namespace ProductApi.DataAccess
             await _productRepository.SaveChangesAsync(); // Save changes to the database
             return product;
         }
-        
 
-        public async Task<Product?> UpdateProduct(Guid id, ProductDTO productValue, IMapper mapper)
+        public async Task<Product?> UpdateProduct(Guid id, ProductDTO productValue)
         {
             var product = await _productRepository.Products.FindAsync(id);
 
@@ -59,7 +59,7 @@ namespace ProductApi.DataAccess
             }
             product.DateTimeUpdated = DateTime.Now;
 
-            var productUpd = mapper.Map(productValue, product);
+            var productUpd = _mapper.Map(productValue, product);
 
             await _productRepository.SaveChangesAsync();
             

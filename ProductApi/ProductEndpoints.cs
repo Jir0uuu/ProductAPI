@@ -17,15 +17,18 @@ namespace ProductApi
         {
             var products = app.MapGroup("/products");
 
-            products.MapGet("/", GetAllProducts);
-            products.MapGet("/{id}", GetSpecificProduct);
+            #region Required Endpoints
+            products.MapPost("/", CreateProduct).RequireAuthorization();
+            products.MapGet("/", GetAllProducts).RequireAuthorization();
+            products.MapGet("/{id}", GetSpecificProduct).RequireAuthorization();
+            products.MapPut("/{id:guid}", Update).RequireAuthorization();
+            products.MapDelete("/{id:guid}", Delete).RequireAuthorization();
+            #endregion
+
             products.MapGet("/class/{Name}", GetClassProduct);
-            products.MapPost("/", CreateProduct);
-            products.MapPut("/update/{id:guid}", Update);
-            products.MapDelete("/{id:guid}", Delete);
         }
 
-        private static async Task<Results<NoContent, NotFound>> Delete(Guid id ,IDataAccess dataAccess)
+        private static async Task<Results<NoContent, NotFound>> Delete(Guid id ,IProductDataAccess dataAccess)
         {
             var exist = await dataAccess.Exists(id);
             if(!exist)
@@ -36,9 +39,9 @@ namespace ProductApi
             return TypedResults.NoContent();
         }
 
-        private static async Task<Results<Ok<Product>, NotFound>> Update(Guid id, ProductDTO productDTO, IDataAccess dataAccess, IMapper mapper)
+        private static async Task<Results<Ok<Product>, NotFound>> Update(Guid id, ProductDTO productDTO, IProductDataAccess dataAccess)
         {
-            var updatedProduct = await dataAccess.UpdateProduct(id, productDTO, mapper);
+            var updatedProduct = await dataAccess.UpdateProduct(id, productDTO);
             if(updatedProduct == null)
             {
                 return TypedResults.NotFound();
@@ -46,14 +49,14 @@ namespace ProductApi
             return TypedResults.Ok(updatedProduct);
         }
 
-        static async Task<Created<Product>> CreateProduct(ProductDTO productDTO, IDataAccess dataAccess, IMapper mapper)
+        static async Task<Created<Product>> CreateProduct(ProductDTO productDTO, IProductDataAccess dataAccess, IMapper mapper)
         {
             var product = mapper.Map<Product>(productDTO);
             var newProduct = await dataAccess.InsertProduct(product);
             return TypedResults.Created($"/products/{newProduct.ID}", newProduct);
         }
 
-        private static async Task<Results<Ok<List<Product>>, NotFound>> GetClassProduct(string Name, IDataAccess dataAccess)
+        private static async Task<Results<Ok<List<Product>>, NotFound>> GetClassProduct(string Name, IProductDataAccess dataAccess)
         {
             var list = await dataAccess.GetClassProduct(Name);
             if(list == null || list.Count == 0)
@@ -63,7 +66,7 @@ namespace ProductApi
             return TypedResults.Ok(list);
         }
 
-        static async Task<Results<Ok<Product>, NotFound>> GetSpecificProduct(string id, IDataAccess dataAccess)
+        static async Task<Results<Ok<Product>, NotFound>> GetSpecificProduct(string id, IProductDataAccess dataAccess)
         {
             var product = await dataAccess.GetProductById(Guid.Parse(id));
             if (product == null)
@@ -73,7 +76,7 @@ namespace ProductApi
             return TypedResults.Ok(product);
         }
 
-        static async Task<IResult> GetAllProducts(IDataAccess dataAccess)
+        static async Task<IResult> GetAllProducts(IProductDataAccess dataAccess)
         {
             var list = await dataAccess.GetAllProducts();
             return Results.Ok(list);

@@ -157,3 +157,5 @@ E:\Project C#\Technical Exams\ProductApi\ProductApi\bin\Debug\net9.0\Swashbuckle
 E:\Project C#\Technical Exams\ProductApi\ProductApi\bin\Debug\net9.0\Swashbuckle.AspNetCore.SwaggerUI.dll
 E:\Project C#\Technical Exams\ProductApi\ProductApi\obj\Debug\net9.0\ProductApi.MvcApplicationPartsAssemblyInfo.cs
 E:\Project C#\Technical Exams\ProductApi\ProductApi\bin\Debug\net9.0\AutoMapper.dll
+E:\Project C#\Technical Exams\ProductApi\ProductApi\bin\Debug\net9.0\BCrypt.Net-Next.dll
+E:\Project C#\Technical Exams\ProductApi\ProductApi\bin\Debug\net9.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
